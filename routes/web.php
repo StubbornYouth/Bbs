@@ -13,5 +13,8 @@
 
 Route::get('/','PagesController@root')->name('root');
 
+//登录注册生成的路由
 Auth::routes();
+
+Route::resource('users', 'UsersController', ['only' => ['show', 'update', 'edit']]);
 
