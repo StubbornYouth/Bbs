@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +15,22 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(App\Models\User::class, function (Faker $faker) {
+    static $password;
+    //使用 now() 和 toDateTimeString() 来创建格式如 2017-10-13 18:42:40 的时间戳
+    $now=Carbon::now()->toDateTimeString();
+    //返回数组填充数据
     return [
+        //生成名称
         'name' => $faker->name,
+        //生成安全邮箱
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        //生成加密密码
+        'password' => $password ?: $password=bcrypt('secret'), // secret
+        //生成记住我的令牌
         'remember_token' => str_random(10),
+        //随机生成小段落文本
+        'introduction' => $faker->sentence(),
+        'created_at' => $now,
+        'updated_at' => $now,
     ];
 });
