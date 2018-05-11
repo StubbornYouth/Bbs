@@ -27,3 +27,5 @@ Route::post('upload_image', 'TopicsController@uploadImage')->name('topics.upload
 //?代表参数可选，兼容之前填充slug为空的数据
 Route::get('topics/{topic}/{slug?}','TopicsController@show')->name('topics.show');
 
+
+Route::resource('replies', 'RepliesController', ['only' => ['store','destroy']]);

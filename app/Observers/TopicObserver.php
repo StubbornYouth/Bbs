@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Topic;
-use App\Handlers\SlugTranslateHandler;
+use App\Jobs\TranslateSlug;
 //生命周期时间点进行监控
 // creating, created, updating, updated, saving,
 // saved,  deleting, deleted, restoring, restored
@@ -33,8 +33,17 @@ class TopicObserver
 
          // 如 slug 字段无内容，即使用翻译器对 title 进行翻译
         //$this->app 属性访问容器。
+
+            //$topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
+
+
+    }
+
+    //实例创建或编辑数据入库后触发
+    public function saved(Topic $topic){
+        //任务分发 在saved方法中，避免创建时实例id不存在，无法分发给队列
         if ( ! $topic->slug) {
-            $topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
+            dispatch(new TranslateSlug($topic));
         }
     }
 }

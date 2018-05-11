@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         //注册数据填充
         $this->call(UsersTableSeeder::class);
 		$this->call(TopicsTableSeeder::class);
+        $this->call(ReplysTableSeeder::class);
     }
 }

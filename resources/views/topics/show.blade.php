@@ -63,6 +63,14 @@
 
             </div>
         </div>
+        <div class="panel panel-default topic-reply">
+            <div class="panel-body">
+                {{-- 回复框 该方法第一个为条件判断即boolean 如果true就引用，如果false就不引用--}}
+                @includeWhen(Auth::check(), 'topics._reply_box', ['topic' => $topic])
+                {{-- 回复列表 with方法防止N+1 --}}
+                @include('topics._reply_list', ['replies' => $topic->replies()->with('user')->get()])
+            </div>
+        </div>
     </div>
 </div>
 @stop
