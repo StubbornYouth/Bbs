@@ -34,7 +34,7 @@ class TopicReplied extends Notification
     public function via($notifiable)
     {
         //使用数据库频道来发送邮件
-        return ['database'];
+        return ['database','mail'];
     }
 
     /**
@@ -43,14 +43,35 @@ class TopicReplied extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+
+    //因为使用数据库通知频道，我们需要定义 toDatabase()。这个方法接收 $notifiable 实例参数并返回一个普通的 PHP 数组。这个返回的数组将被转成 JSON 格式并存储到通知数据表的 data 字段中
+    public function toDatabase($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $topic = $this->reply->topic;
+        $link =  $topic->link(['#reply' . $this->reply->id]);
+
+        // 存入数据库里的数据
+        return [
+            'reply_id' => $this->reply->id,
+            'reply_content' => $this->reply->content,
+            'user_id' => $this->reply->user->id,
+            'user_name' => $this->reply->user->name,
+            'user_avatar' => $this->reply->user->head,
+            'topic_link' => $link,
+            'topic_id' => $topic->id,
+            'topic_title' => $topic->title,
+        ];
     }
 
+
+    public function toMail($notifiable)
+    {
+        $url = $this->reply->topic->link(['#reply' . $this->reply->id]);
+
+        return (new MailMessage)
+                    ->line('你的话题有新回复！')
+                    ->action('查看回复', $url);
+    }
     /**
      * Get the array representation of the notification.
      *
@@ -63,4 +84,5 @@ class TopicReplied extends Notification
             //
         ];
     }
+
 }
