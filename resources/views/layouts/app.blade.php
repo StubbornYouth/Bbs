@@ -32,7 +32,10 @@
 
         @include('layouts._footer')
     </div>
-
+    {{-- sudo--su --}}
+    @if (app()->isLocal())
+        @include('sudosu::user-selector')
+    @endif
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')

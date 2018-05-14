@@ -24,10 +24,15 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    //构造函数执行后会自动执行
     public function boot()
     {
         $this->registerPolicies();
 
-        //
+        //权限控制只有站长才能访问
+        \Horizon::auth(function ($request) {
+            // 是否是站长
+            return \Auth::user()->hasRole('Founder');
+        });
     }
 }

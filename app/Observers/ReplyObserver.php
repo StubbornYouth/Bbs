@@ -31,4 +31,9 @@ class ReplyObserver
     {
         //
     }
+
+    public function deleted(Reply $reply){
+        //回复被删除时,话题回复数减1
+        $reply->topic->decrement('reply_count',1);
+    }
 }

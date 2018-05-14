@@ -46,4 +46,9 @@ class TopicObserver
             dispatch(new TranslateSlug($topic));
         }
     }
+
+    public function deleted(Topic $topic){
+        //删除话题时,回复一并删除
+        \DB::table('replies')->where('topic_id',$topic->id)->delete();
+    }
 }

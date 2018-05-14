@@ -45,5 +45,22 @@ class UsersTableSeeder extends Seeder
         $user->email = 'stubbornyouth@163.com';
         $user->head = 'https://fsdhubcdn.phphub.org/uploads/images/201710/14/1/ZqM7iaP4CR.png?imageView2/1/w/200/h/200';
         $user->save();
+
+        //初始化用户角色 将1号用户指派为站长
+        //assignRole() 是HasRoles中定义的 User模型加载了它
+        $user->assignRole('Founder');
+
+        //将2号指派为管理员
+        $user = User::find(2);
+        $user->assignRole('Maintainer');
+
+        //$user->hasRole('角色名') 判断是否是该角色
+        //$user->hasAnyRole(Role::all()) 是否拥有至少一个角色
+        //$user->hasAllRoles(Role::all()) 是否拥有所有角色
+
+        //$user->can('权限名') 检查是否拥有某个权限
+        //$role->hasPermissonTo('权限名') 检查角色是否拥有摸个属性
+        //$user->givePermissionTo('权限名') 为用户添加直接权限
+        //$user->getDirectPermissions() 为用户获取所有直接权限
     }
 }
